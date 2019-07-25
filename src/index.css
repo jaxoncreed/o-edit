@@ -1,0 +1,27 @@
+html,
+body,
+#root {
+  height: 100% !important;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+body {
+  background-color: #1c1c1c;
+}
+
+
+.dropdown {
+  display: inline-block;
+}
+
+.dropdown__content {
+  display: none;
+  position: absolute;
+}
+
+.dropdown--active .dropdown__content {
+  display: block;
+}
