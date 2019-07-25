@@ -10,13 +10,61 @@ import ProfileImage from '../Share/ProfileImage';
 class Editor extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       content: 'Moses supposes his toesis are roses',
       changesToCompare: false,
       unsavedChanges: false,
-      compareMode: true,
+      compareMode: false,
       originalContent: 'Moses supposes his toesis arent roses'
     }
+
+    this.handleEditorDidMount = this.handleEditorDidMount.bind(this)
+  }
+
+  componentDidMount() {
+    setTimeout(async () => {
+      console.log(this.props.location)
+      let docUrl = this.getDocUrl()
+      if (!docUrl) {
+        const newDocUrl = await new Promise((resolve, reject) => {
+          var result = window.prompt('Enter a valid URL for the document you would like to view');
+          resolve(result);
+        })
+        this.props.history.push(`${this.props.location.pathname}?doc=${newDocUrl}`)
+        return
+      }
+      console.log(docUrl)
+    }, 1000)
+  }
+
+  componentWillUnmount() {
+    if (this.editor) {
+      this.editor.dispose()
+    }
+  }
+
+  getDocUrl() {
+    const location = this.props.location
+    if (location) {
+      try {
+        const thisUrl = new URL('https://example.com' + location.pathname + location.search)
+        const inputtedUrl = thisUrl.searchParams.get('doc')
+        try {
+          new URL(inputtedUrl)
+          return inputtedUrl
+        } catch (e) {
+          return null
+        }
+      } catch (e) {
+        return null
+      }
+    }
+    return null
+  }
+
+  handleEditorDidMount(valueGetter, editor) {
+    this.editor = editor
   }
 
   render() {
@@ -51,7 +99,7 @@ class Editor extends Component {
               language={'none'}
               original={this.state.originalContent}
               modified={this.state.content}
-              editorDidMount={() => console.log('mounted')}
+              editorDidMount={this.handleEditorDidMount}
               loading={'Loading...'}
             />
           ) : (
@@ -59,7 +107,7 @@ class Editor extends Component {
               theme={'dark'}
               language={'none'}
               value={this.state.content}
-              editorDidMount={() => console.log('mounted')}
+              editorDidMount={this.handleEditorDidMount}
               loading={'Loading...'}
             />
           )}
