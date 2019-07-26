@@ -14,7 +14,6 @@ export const EditorWrapper = styled.section`
   top: 0;
   height: 100vh;
   width: 100vw;
-  overflow: auto;
   background-color: #1c1c1c;
   flex-direction: column;
 `;
